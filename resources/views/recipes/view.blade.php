@@ -170,7 +170,7 @@
                                 </label>
                             </div>
 
-                            <div x-data="{ rating: {{ $ratingValue ?? 0 }} }" class="flex justify-between items-center">
+                            <div x-data="{ rating: {{ $myRatingValue ?? 0 }} }" class="flex justify-between items-center">
                                 <p class="leading-normal text-sm opacity-80">Rating</p>
                                 <span>
                                     
@@ -178,7 +178,7 @@
                                         <i 
                                             @click="rating = {{ $i }}; saveRating({{ $i }})" 
                                             @mouseover="rating = {{ $i }}" 
-                                            @mouseleave="rating = {{ $ratingValue ?? 0 }}" 
+                                            @mouseleave="rating = {{ $myRatingValue ?? 0 }}" 
                                             :class="rating >= {{ $i }} ? 'fa fa-star text-yellow-500' : 'fa fa-star text-gray-400'" 
                                             class="cursor-pointer text-xl transition-colors duration-200">
                                         </i>
@@ -210,7 +210,7 @@
                         <div class="flex justify-between items-center mb-6">
                           <h2 class="text-md font-bold text-slate-700">Comments (0)</h2>
                       </div>
-                      <form class="mb-6">
+                      <form class="mb-6" >
                           <div class="py-2 px-4 mb-4 bg-gray-50 rounded-lg rounded-t-lg border border-gray-200">
                               <label for="comment" class="sr-only">Enter Your Comment</label>
                               <textarea id="comment" rows="6"

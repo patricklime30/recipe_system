@@ -89,14 +89,25 @@ class RecipeController extends Controller
     public function show(string $id)
     {
         $recipe = Recipe::find($id);
+        $user = Auth::user()->id;
 
         // Check if the recipe is favorited by the user
-        $isFavorited = $recipe->favorites()->where('user_id', Auth::user()->id)->exists();
+        $isFavorited = $recipe->favorites()->where('user_id', $user)->exists();
 
         // check rating calculation
-        $ratingValue = Rating::where('recipe_id', $id)->avg('score');
+        $ratingValue = Rating::where('recipe_id', $id)
+                            ->avg('score');
 
-        return view('recipes.view', ['recipe'=>$recipe, 'isFavorited' => $isFavorited, 'ratingValue' => $ratingValue]);
+        $myRatingValue = Rating::where('recipe_id', $id)
+                                ->where('from_user', $user)
+                                ->avg('score');
+
+        return view('recipes.view', [
+                                        'recipe'=>$recipe, 
+                                        'isFavorited' => $isFavorited,
+                                        'ratingValue' => $ratingValue,
+                                        'myRatingValue' => $myRatingValue
+                                    ]);
     }
 
     /**
