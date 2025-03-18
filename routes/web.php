@@ -11,8 +11,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $recipe = Recipe::all();
-    
+    $recipe = Recipe::all(); 
+
     return view('dashboard', ['recipe' => $recipe]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('recipe', RecipeController::class);
     Route::resource('favorite', FavoriteController::class);
+
+    Route::post('recipe/rating', [RecipeController::class, 'saveRating'])->name('recipe.rating');
 });
 
 require __DIR__.'/auth.php';

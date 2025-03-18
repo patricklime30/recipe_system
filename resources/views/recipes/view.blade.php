@@ -67,7 +67,7 @@
                                     <a
                                         class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg bg-inherit text-yellow-700">
                                         <i class="fa fa-star"></i>
-                                        <span class="ml-2">0.0</span>
+                                        <span class="ml-2">{{ number_format($ratingValue, 1) }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -170,15 +170,15 @@
                                 </label>
                             </div>
 
-                            <div x-data="{ rating: 0 }" class="flex justify-between items-center">
+                            <div x-data="{ rating: {{ $ratingValue ?? 0 }} }" class="flex justify-between items-center">
                                 <p class="leading-normal text-sm opacity-80">Rating</p>
                                 <span>
                                     
                                     @for ($i = 1; $i <= 5; $i++)
                                         <i 
-                                            @click="rating = {{ $i }}" 
+                                            @click="rating = {{ $i }}; saveRating({{ $i }})" 
                                             @mouseover="rating = {{ $i }}" 
-                                            @mouseleave="rating = 0" 
+                                            @mouseleave="rating = {{ $ratingValue ?? 0 }}" 
                                             :class="rating >= {{ $i }} ? 'fa fa-star text-yellow-500' : 'fa fa-star text-gray-400'" 
                                             class="cursor-pointer text-xl transition-colors duration-200">
                                         </i>
@@ -190,12 +190,11 @@
                     </div>
                 </div>
 
-                <div
-                    class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl mt-4 rounded-2xl bg-clip-border">
+                <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl mt-4 rounded-2xl bg-clip-border">
                     
                     <div class="flex-auto w-full p-4 text-center">
                         <div class="transition-all duration-200 ease-nav-brand">
-                            <h6 class="mb-4 text-slate-700 capitalize">Need other menu?</h6>
+                            <h6 class="mb-4 text-md font-bold text-slate-700 capitalize">Need other menu?</h6>
                             <a href="{{ route('dashboard') }}" class="inline-block w-full px-8 py-2 mb-4 text-xs font-bold leading-normal text-center text-white capitalize transition-all ease-in rounded-lg shadow-md bg-slate-700 bg-150 hover:shadow-xs hover:-translate-y-px">
                                 Check our recipe
                             </a>
@@ -205,6 +204,27 @@
                         
                     </div>
                 </div>
+
+                <section class="bg-white py-8 mt-4 antialiased border-0 shadow-xl rounded-2xl bg-clip-border">
+                    <div class="max-w-2xl mx-auto px-4">
+                        <div class="flex justify-between items-center mb-6">
+                          <h2 class="text-md font-bold text-slate-700">Comments (0)</h2>
+                      </div>
+                      <form class="mb-6">
+                          <div class="py-2 px-4 mb-4 bg-gray-50 rounded-lg rounded-t-lg border border-gray-200">
+                              <label for="comment" class="sr-only">Enter Your Comment</label>
+                              <textarea id="comment" rows="6"
+                                  class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none bg-gray-50"
+                                  placeholder="Write a comment..." required></textarea>
+                          </div>
+                          <button type="submit"
+                              class="inline-flex items-center py-2.5 px-4 text-xs font-bold leading-normal text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                              <i class="fa fa-send text-2.8 mr-2"></i>
+                              Post comment
+                          </button>
+                      </form>
+                    </div>
+                </section>
             </div>
 
         </div>
@@ -232,13 +252,36 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data.message);
-                   
+                  
+                    location.reload();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     console.log('failed')
                 });
             });
+
+            function saveRating(ratingValue) {
+                const recipeId = {{ $recipe->id }};
+                
+                // Here you can send the rating to the server
+                fetch('{{ route('recipe.rating') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token if using Laravel
+                    },
+                    body: JSON.stringify({ rating: ratingValue, recipe_id: recipeId })
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
         </script>
     @endsection
 </x-app-layout>

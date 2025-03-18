@@ -119,7 +119,7 @@
 
                                     <span class="text-yellow-700 text-sm">
                                         <i class="fa fa-star"></i>
-                                        0.0
+                                        {{ number_format($data->ratings()->avg('score') ?? 0, 1) }}
                                     </span>
 
                                     <span class="text-gray-500 text-sm">

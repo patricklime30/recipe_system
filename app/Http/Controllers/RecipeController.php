@@ -93,7 +93,10 @@ class RecipeController extends Controller
         // Check if the recipe is favorited by the user
         $isFavorited = $recipe->favorites()->where('user_id', Auth::user()->id)->exists();
 
-        return view('recipes.view', ['recipe'=>$recipe, 'isFavorited' => $isFavorited]);
+        // check rating calculation
+        $ratingValue = Rating::where('recipe_id', $id)->avg('score');
+
+        return view('recipes.view', ['recipe'=>$recipe, 'isFavorited' => $isFavorited, 'ratingValue' => $ratingValue]);
     }
 
     /**
@@ -166,5 +169,22 @@ class RecipeController extends Controller
         $recipe->delete();
 
         return redirect()->route('recipe.index')->with('success', 'Recipe deleted successfully.');
+    }
+
+    public function saveRating(Request $request)
+    {
+        $user = Auth::user()->id;
+
+        $rating = Rating::where('from_user', $user)
+                            ->where('recipe_id', $request->recipe_id)
+                            ->first();
+        
+        if($rating){
+            $rating->delete();
+        }
+        
+        Rating::create(['from_user' => $user, 'recipe_id' => $request->recipe_id, 'score' => $request->rating]);
+
+        return response()->json(['success' => 'Rating added!']);
     }
 }

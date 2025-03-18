@@ -220,13 +220,73 @@
                                                         Edit
                                                     </a>
 
-                                                    <form action="{{ route('recipe.destroy', $data->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
+                                                    <div x-data="{modalIsOpen: false}" class="inline">
+                                                        <a x-on:click="modalIsOpen = true" class="cursor-pointer text-xs font-bold leading-tight text-red-400">Delete using Alpine</a>
+                                                        
+                                                        <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false" class="fixed inset-0 z-30 flex items-end justify-center p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8" role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
+                                                            <!-- Modal Dialog -->
+                                                            <div x-show="modalIsOpen" x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity" x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100" class="flex max-w-lg flex-col gap-4 overflow-hidden border border-outline bg-white text-on-surface shadow-xl rounded-2xl">
+                                                                <!-- Dialog Header -->
+                                                                <div class="flex items-center justify-end bg-surface-alt/60 p-4">
+                                                                  
+                                                                    <button x-on:click="modalIsOpen = false" aria-label="close modal">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                                <!-- Dialog Body -->
+                                                                <div class="p-4"> 
+                                                                    <h3 class="mb-8 text-lg font-semibold text-gray-500">Are you sure you want to delete this recipe?</h3>
+                                                                   
+                                                                    <form action="{{ route('recipe.destroy', $data->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+        
+                                                                        <div class="flex flex-col w-full gap-2">
+                                                                            <x-danger-button class="w-full justify-center">Delete {{ $data->title }}</x-danger-button> 
+                                                                            <x-secondary-button type="button" class="w-full justify-center" x-on:click="modalIsOpen = false">Cancel</x-secondary-button>
+                                                                               
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                        <button type="submit" class="text-xs font-bold leading-tight text-red-400" onclick="return confirm('Are you sure you want to delete this recipe?');">Delete</button>
-                                                    </form>
-                                                    
+
+                                                    {{-- alternative pure js--}}
+                                                    <button onclick="openModal({{ $data->id }})" class="cursor-pointer text-xs font-bold leading-tight text-red-400 ml-2">Delete Using Js</button>
+    
+                                                    <div id="deleteModal-{{ $data->id }}" class="fixed inset-0 z-30 hidden flex items-center justify-center p-4 backdrop-blur-md" role="dialog" aria-modal="true">
+                                                        <div class="flex max-w-lg flex-col gap-4 overflow-hidden border bg-white shadow-xl rounded-2xl">
+                                                            <!-- Dialog Header -->
+                                                            <div class="flex items-center justify-end p-4">
+                                                                <button onclick="closeModal({{ $data->id }})" aria-label="close modal">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                            <!-- Dialog Body -->
+                                                            <div class="p-4">
+                                                                <h3 class="mb-8 text-lg font-semibold text-gray-500">Are you sure you want to delete this recipe?</h3>
+                                                                
+                                                                <form action="{{ route('recipe.destroy', $data->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+    
+                                                                    <div class="flex flex-col w-full gap-2">
+                                                                        <button type="submit" class="bg-red-500 inline-block w-full px-8 py-2 text-sm font-bold leading-normal text-center text-white capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px">Delete {{ $data->title }}</button>
+                                                                        <button type="button" class="inline-block w-full px-4 py-2 bg-white border border-gray-300 font-bold text-sm text-gray-700 capitalize transition-all ease-in rounded-lg shadow-md hover:shadow-xs hover:-translate-y-px" onclick="closeModal({{ $data->id }})">Cancel</button>
+                                                                    
+                                                                    </div>
+                                                                </form>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -239,4 +299,16 @@
             </div>
         </div>
     </div>
+
+    @section('scripts')
+        <script>
+            function openModal(index) {
+                document.getElementById('deleteModal-' + index).classList.remove('hidden');
+            }
+
+            function closeModal(index) {
+                document.getElementById('deleteModal-' + index).classList.add('hidden');
+            }
+        </script>
+    @endsection
 </x-app-layout>
