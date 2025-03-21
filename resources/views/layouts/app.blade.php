@@ -26,14 +26,22 @@
             @include('layouts.sidebar')
 
             @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50" role="alert"> 
+                    <div>
+                        <span class="font-medium">
+                            {{ session('success') }}
+                        </span>
+                    </div>
                 </div>
             @endif
 
             @if (session()->has('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
+                <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50" role="alert">
+                    <div>
+                        <span class="font-medium">
+                            {{ session('error') }}
+                        </span>
+                    </div>
                 </div>
             @endif
 

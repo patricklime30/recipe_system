@@ -29,4 +29,9 @@ class Recipe extends Model
     {
         return $this->hasMany(Rating::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

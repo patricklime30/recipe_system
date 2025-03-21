@@ -255,7 +255,6 @@
                                                         </div>
                                                     </div>
 
-
                                                     {{-- alternative pure js--}}
                                                     <button onclick="openModal({{ $data->id }})" class="cursor-pointer text-xs font-bold leading-tight text-red-400 ml-2">Delete Using Js</button>
     

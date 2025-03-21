@@ -124,7 +124,7 @@
 
                                     <span class="text-gray-500 text-sm">
                                         <i class="fa fa-comment"></i>
-                                        0
+                                        {{ $data->comments()->count() ?? 0 }}
                                     </span>
                                 </div>
                             </div>

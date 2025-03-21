@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Rating;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
@@ -102,11 +103,15 @@ class RecipeController extends Controller
                                 ->where('from_user', $user)
                                 ->avg('score');
 
+          // check comment total
+        $comment = Comment::where('recipe_id', $id)->get();
+
         return view('recipes.view', [
                                         'recipe'=>$recipe, 
                                         'isFavorited' => $isFavorited,
                                         'ratingValue' => $ratingValue,
-                                        'myRatingValue' => $myRatingValue
+                                        'myRatingValue' => $myRatingValue,
+                                        'comment' => $comment
                                     ]);
     }
 
@@ -194,8 +199,32 @@ class RecipeController extends Controller
             $rating->delete();
         }
         
-        Rating::create(['from_user' => $user, 'recipe_id' => $request->recipe_id, 'score' => $request->rating]);
+        Rating::create([
+            'from_user' => $user,
+            'recipe_id' => $request->recipe_id,
+            'score' => $request->rating
+        ]);
 
         return response()->json(['success' => 'Rating added!']);
+    }
+
+    public function sendComment(Request $request){
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $data = [
+            'recipe_id' => $request->recipeId,
+            'user_id' => Auth::user()->id,
+            'content' => $request->content,
+        ];
+
+        if($request->parentId){
+            $data['parent_id'] = $request->parentId;
+        }
+
+        Comment::create($data);
+
+        return response()->json(['success' => 'Comment added!']);
     }
 }

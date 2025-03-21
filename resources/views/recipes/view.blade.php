@@ -67,7 +67,7 @@
                                     <a
                                         class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg bg-inherit text-yellow-700">
                                         <i class="fa fa-star"></i>
-                                        <span class="ml-2">{{ number_format($ratingValue, 1) }}</span>
+                                        <span class="ml-2">{{ number_format($ratingValue ?? 0, 1)}}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -208,21 +208,124 @@
                 <section class="bg-white py-8 mt-4 antialiased border-0 shadow-xl rounded-2xl bg-clip-border">
                     <div class="max-w-2xl mx-auto px-4">
                         <div class="flex justify-between items-center mb-6">
-                          <h2 class="text-md font-bold text-slate-700">Comments (0)</h2>
-                      </div>
-                      <form class="mb-6" >
-                          <div class="py-2 px-4 mb-4 bg-gray-50 rounded-lg rounded-t-lg border border-gray-200">
-                              <label for="comment" class="sr-only">Enter Your Comment</label>
-                              <textarea id="comment" rows="6"
-                                  class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none bg-gray-50"
-                                  placeholder="Write a comment..." required></textarea>
-                          </div>
-                          <button type="submit"
-                              class="inline-flex items-center py-2.5 px-4 text-xs font-bold leading-normal text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                              <i class="fa fa-send text-2.8 mr-2"></i>
-                              Post comment
-                          </button>
-                      </form>
+                            <h2 class="text-md font-bold text-slate-700">Comments ({{ $comment->count() ?? 0 }})</h2>
+                            
+                            <div x-data="{modalIsOpen: false}" class="inline">
+                                <i x-on:click="modalIsOpen = true" class="fa fa-archive cursor-pointer hover:text-gray-400"></i>
+                                
+                                <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false" class="fixed inset-0 z-30 flex items-end justify-center p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8" role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
+                                    <!-- Modal Dialog -->
+                                    <div x-show="modalIsOpen" x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity" x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100" class="flex w-full max-w-lg flex-col gap-4 overflow-hidden border border-outline bg-white text-on-surface shadow-xl rounded-2xl">
+                                        <!-- Dialog Header -->
+                                        <div class="flex items-center justify-end bg-surface-alt/60 p-4">
+                                          
+                                            <button x-on:click="modalIsOpen = false" aria-label="close modal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <!-- Dialog Body -->
+                                        <div class="p-4"> 
+                                            @foreach ($comment as $c)
+                                                <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                                    <footer class="flex justify-between items-center mb-2">
+                                                        <div class="flex items-center">
+                                                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
+                                                                    class="mr-2 w-6 h-6 rounded-full"
+                                                                    src="{{ asset('assets/img/logo.png') }}"
+                                                                    alt="user profile">
+                                                                {{ $c->user->name }}
+                                                            </p>
+
+                                                            @php
+                                                                $date = $c->created_at;
+                                                                $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
+                                                            @endphp
+
+                                                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                                                {{ $formattedDate }}
+                                                            </p>
+                                                        </div>
+                                                    </footer>
+
+                                                    <p class="text-gray-500">
+                                                        {{ $c->content }}
+                                                    </p>
+
+                                                    <div class="flex items-center mt-4 space-x-4">
+                                                        <button type="button"
+                                                            class="flex items-center text-sm text-gray-500 hover:underline font-medium">
+                                                            <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
+                                                            </svg>
+                                                            Reply
+                                                        </button>
+                                                    </div>
+                                                </article>
+                                                
+                                                <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+                                                @if($c->replies)
+                                                    @foreach($c->replies as $reply)
+                                                        <article class="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+                                                            <footer class="flex justify-between items-center mb-2">
+                                                                <div class="flex items-center">
+                                                                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
+                                                                            class="mr-2 w-6 h-6 rounded-full"
+                                                                            src="{{ asset('assets/img/logo.png') }}"
+                                                                            alt="user profile">
+                                                                        {{ $reply->user->name }}
+                                                                    </p>
+                                                                    
+                                                                    @php
+                                                                        $date = $reply->created_at;
+                                                                        $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
+                                                                    @endphp
+
+                                                                    <p class="text-xs text-gray-600 dark:text-gray-400">
+                                                                        {{ $formattedDate }}
+                                                                    </p>
+                                                                </div>
+                                                                
+                                                            </footer>
+                                                            <p class="text-gray-500 dark:text-gray-400">
+                                                                {{ $reply->content }}
+                                                            </p>
+                                                            <div class="flex items-center mt-4 space-x-4">
+                                                                <button type="button"
+                                                                    class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
+                                                                    <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
+                                                                    </svg>                
+                                                                    Reply
+                                                                </button>
+                                                            </div>
+                                                        </article>
+                                                    @endforeach
+                                                @endif
+
+                                            @endforeach
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <div class="py-2 px-4 mb-4 bg-gray-50 rounded-lg rounded-t-lg border border-gray-200">
+                                <label for="comment" class="sr-only">Enter Your Comment</label>
+                                <textarea id="body_comment" rows="6" name="content"
+                                    class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none bg-gray-50"
+                                    placeholder="Write a comment..." required></textarea>
+                            </div>
+                            <button type="button" onclick="submitComment()"
+                                class="inline-flex items-center py-2.5 px-4 text-xs font-bold leading-normal text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                                <i class="fa fa-send text-2.8 mr-2"></i>
+                                Post comment
+                            </button>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -261,7 +364,36 @@
                 });
             });
 
-            function saveRating(ratingValue) {
+            function submitComment() {
+                const recipeId = {{ $recipe->id }};
+                const message = document.getElementById('body_comment').value;
+
+                if(message){
+                    // Here you can send the rating to the server
+                    fetch('{{ route('recipe.comment') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token if using Laravel
+                        },
+                        body: JSON.stringify({ recipeId: recipeId, content: message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+                else{
+                    alert('empty content');
+                }
+                
+            }
+
+            function saveRating(con) {
                 const recipeId = {{ $recipe->id }};
                 
                 // Here you can send the rating to the server

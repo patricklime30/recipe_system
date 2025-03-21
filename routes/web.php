@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('favorite', FavoriteController::class);
 
     Route::post('recipe/rating', [RecipeController::class, 'saveRating'])->name('recipe.rating');
+
+    Route::post('recipe/comment', [RecipeController::class, 'sendComment'])->name('recipe.comment');
 });
 
 require __DIR__.'/auth.php';
