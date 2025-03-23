@@ -75,7 +75,7 @@
                     <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0 mb-4">
                         <a href="{{ route('recipe.show', $data->id) }}"
                             class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl rounded-2xl bg-clip-border">
-                            <img class="w-full max-h-[180px] rounded-t-2xl" src="{{ asset('storage/'.$data->image_path) }}"
+                            <img class="w-full h-[180px] rounded-t-2xl" src="{{ asset('storage/'.$data->image_path) }}"
                                 alt="cover recipe">
 
                             <div class="flex-auto p-6 pt-0">

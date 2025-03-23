@@ -22,9 +22,15 @@
     </head>
     <body class="m-0 font-sans antialiased text-slate-500">
         <div class="absolute w-full min-h-screen bg-gray-100">
-            {{-- sidebar --}}
-            @include('layouts.sidebar')
-
+            
+            @auth
+                {{-- sidebar for auth user --}}
+                @include('layouts.sidebar')     
+            @else
+                {{-- navbar for guest user --}}
+                @include('layouts.navigation')
+            @endauth
+            
             @if (session()->has('success'))
                 <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50" role="alert"> 
                     <div>

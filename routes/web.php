@@ -4,10 +4,26 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use App\Models\Recipe;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $topRecipes = Recipe::with('ratings') // Eager load the ratings relationship
+                    ->select('recipes.*') // Select all fields from the recipes table
+                    ->withAvg('ratings', 'score') // Calculate the average rating
+                    ->orderBy('ratings_avg_score', 'DESC') // Order by the average rating
+                    ->limit(3) // Limit to 3 results
+                    ->get();
+
+    $totalRecipes = Recipe::count();
+
+    $totalUsers = User::count();
+
+    return view('welcome', [
+                            'recipe' => $topRecipes,
+                            'totalUsers' => $totalUsers,
+                            'totalRecipes' => $totalRecipes 
+                        ]);
 });
 
 Route::get('/dashboard', function () {
