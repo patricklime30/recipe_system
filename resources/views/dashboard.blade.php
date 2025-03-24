@@ -57,84 +57,29 @@
 
                 {{-- search button --}}
                 <div class="flex items-center md:w-1/3 sm:w-full">
-                    <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
-                        <span
-                            class="text-sm ease leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-                            <i class="fa fa-search"></i>
-                        </span>
-                        <input type="text"
-                            class="pl-9 text-sm focus:shadow-primary-outline ease w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
-                            placeholder="Seacrh recipe here..." />
-                    </div>
+                  
+                        <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                       
+                            <span
+                                class="text-sm ease leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                                <i class="fa fa-search"></i>
+                            </span>
+
+                            <input id="search" type="text" name="search"
+                                class="pl-9 text-sm focus:shadow-primary-outline ease w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
+                                placeholder="Search recipe here..." />
+                        </div>
+                    
                 </div>
             </div>
 
             {{-- card --}}
-            <div class="flex flex-wrap p-4 mx-6">
-                @foreach ($recipe as $data)
-                    <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0 mb-4">
-                        <a href="{{ route('recipe.show', $data->id) }}"
-                            class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl rounded-2xl bg-clip-border">
-                            <img class="w-full h-[180px] rounded-t-2xl" src="{{ asset('storage/'.$data->image_path) }}"
-                                alt="cover recipe">
-
-                            <div class="flex-auto p-6 pt-0">
-
-                                <div class="mt-6 text-center">
-
-                                    <div class="mb-2 font-semibold leading-relaxed text-xs text-slate-700">
-                                        @php
-                                            $gradientClass = '';
-
-                                            switch ($data->category) {
-                                                case 'breakfast':
-                                                    $gradientClass = 'from-emerald-600 to-teal-300';
-                                                    break;
-                                                case 'lunch':
-                                                    $gradientClass = 'from-orange-600 to-orange-300';
-                                                    break;
-                                                default:
-                                                    $gradientClass = 'from-gray-600 to-gray-300'; // Default case if needed
-                                                    break;
-                                            }
-                                        @endphp
-
-                                        <span class="bg-gradient-to-tl {{ $gradientClass }} px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
-                                            {{ $data->category }}
-                                        </span>
-                                    </div>
-
-                                    <div class="mt-6 mb-2 font-semibold leading-relaxed text-base text-slate-700">
-                                        {{ $data->title }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="border-black/12.5 rounded-t-2xl p-6 text-center pt-0 pb-6 lg:pt-2 lg:pb-4">
-                                <div class="flex justify-between">
-                                    <span class="text-slate-700 text-sm">
-                                        <i class="fa fa-clock-o"></i>
-                                        {{ $data->cooking_time }} Min
-                                    </span>
-
-                                    <span class="text-yellow-700 text-sm">
-                                        <i class="fa fa-star"></i>
-                                        {{ number_format($data->ratings()->avg('score') ?? 0, 1) }}
-                                    </span>
-
-                                    <span class="text-gray-500 text-sm">
-                                        <i class="fa fa-comment"></i>
-                                        {{ $data->comments()->count() ?? 0 }}
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-                
+            <div id="search-results" class="flex flex-wrap p-4 mx-6">
+                @include('layouts.recipe-list', ['recipe' => $recipe])
             </div>
 
             {{-- end list recipe --}}
         </div>
     </div>
+
 </x-app-layout>

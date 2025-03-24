@@ -27,7 +27,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $recipe = Recipe::all(); 
+    // number of items per page
+    $recipe = Recipe::paginate(3); 
 
     return view('dashboard', ['recipe' => $recipe]);
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -163,7 +163,7 @@
                                 <label class="inline-flex items-center cursor-pointer">
                                     <input type="checkbox" 
                                             id="favorite-toggle"
-                                            class="sr-only peer" {{ $isFavorited ? 'checked':'' }}>
+                                            class="sr-only peer" {{ $isFavorited ?? false ? 'checked':'' }}>
                                     <div
                                         class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
                                     </div>
@@ -226,7 +226,7 @@
                                             </button>
                                         </div>
                                         <!-- Dialog Body -->
-                                        <div class="p-4"> 
+                                        <div class="p-4 h-[250px] overflow-auto"> 
                                             @foreach ($comment as $c)
                                                 <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
                                                     <footer class="flex justify-between items-center mb-2">
@@ -253,57 +253,9 @@
                                                         {{ $c->content }}
                                                     </p>
 
-                                                    <div class="flex items-center mt-4 space-x-4">
-                                                        <button type="button"
-                                                            class="flex items-center text-sm text-gray-500 hover:underline font-medium">
-                                                            <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
-                                                            </svg>
-                                                            Reply
-                                                        </button>
-                                                    </div>
                                                 </article>
                                                 
                                                 <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
-
-                                                @if($c->replies)
-                                                    @foreach($c->replies as $reply)
-                                                        <article class="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
-                                                            <footer class="flex justify-between items-center mb-2">
-                                                                <div class="flex items-center">
-                                                                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
-                                                                            class="mr-2 w-6 h-6 rounded-full"
-                                                                            src="{{ asset('assets/img/logo.png') }}"
-                                                                            alt="user profile">
-                                                                        {{ $reply->user->name }}
-                                                                    </p>
-                                                                    
-                                                                    @php
-                                                                        $date = $reply->created_at;
-                                                                        $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
-                                                                    @endphp
-
-                                                                    <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                                        {{ $formattedDate }}
-                                                                    </p>
-                                                                </div>
-                                                                
-                                                            </footer>
-                                                            <p class="text-gray-500 dark:text-gray-400">
-                                                                {{ $reply->content }}
-                                                            </p>
-                                                            <div class="flex items-center mt-4 space-x-4">
-                                                                <button type="button"
-                                                                    class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                                                                    <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
-                                                                    </svg>                
-                                                                    Reply
-                                                                </button>
-                                                            </div>
-                                                        </article>
-                                                    @endforeach
-                                                @endif
 
                                             @endforeach
                                             

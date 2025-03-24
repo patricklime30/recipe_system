@@ -93,7 +93,10 @@ class RecipeController extends Controller
         $user = Auth::user()->id;
 
         // Check if the recipe is favorited by the user
-        $isFavorited = $recipe->favorites()->where('user_id', $user)->exists();
+        if($user)
+            $isFavorited = $recipe->favorites()->where('user_id', $user)->exists();
+        else
+            $isFavorited = false;
 
         // check rating calculation
         $ratingValue = Rating::where('recipe_id', $id)
