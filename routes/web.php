@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use App\Models\Recipe;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,11 +27,20 @@ Route::get('/', function () {
                         ]);
 });
 
-Route::get('/dashboard', function () {
-    // number of items per page
-    $recipe = Recipe::paginate(3); 
+Route::get('/dashboard', function (Request $request) {
+
+    $searchTerm = $request->search;
+    
+    if($searchTerm){
+        $recipe = Recipe::search($searchTerm)->paginate(3);
+    }
+    else{
+        // number of items per page
+        $recipe = Recipe::paginate(3);
+    }
 
     return view('dashboard', ['recipe' => $recipe]);
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

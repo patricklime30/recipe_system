@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Recipe extends Model
 {
+    use Searchable;
+    
     protected $fillable = [
         'title',
         'ingredients',
@@ -33,5 +36,14 @@ class Recipe extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'category' => $this->category,
+            'cooking_time' => $this->cooking_time,
+        ];
     }
 }
