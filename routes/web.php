@@ -25,7 +25,7 @@ Route::get('/', function () {
                             'totalUsers' => $totalUsers,
                             'totalRecipes' => $totalRecipes 
                         ]);
-});
+})->middleware(['guest']);
 
 Route::get('/dashboard', function (Request $request) {
 

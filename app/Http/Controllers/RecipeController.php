@@ -222,10 +222,6 @@ class RecipeController extends Controller
             'content' => $request->content,
         ];
 
-        if($request->parentId){
-            $data['parent_id'] = $request->parentId;
-        }
-
         Comment::create($data);
 
         return response()->json(['success' => 'Comment added!']);

@@ -205,7 +205,12 @@
                                                 <td
                                                     class="p-2 text-center align-middle bg-transparent whitespace-nowrap shadow-transparent">
                                                     <span class="text-xs font-semibold leading-tight text-slate-400">
-                                                        {{ $data->created_at }}
+                                                        @php
+                                                            $date = $data->created_at;
+                                                            $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
+                                                        @endphp
+
+                                                        {{ $formattedDate }}
                                                     </span>
                                                 </td>
                                                 <td

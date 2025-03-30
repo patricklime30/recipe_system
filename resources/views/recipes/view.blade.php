@@ -154,7 +154,12 @@
                             <div class="flex justify-between mb-2">
                                 <p class="leading-normal text-sm opacity-80">Published At</p>
                                 <p class="mb-0 font-semibold leading-normal capitalize text-sm">
-                                    {{ $recipe->created_at }}
+                                    @php
+                                        $date = $recipe->created_at;
+                                        $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
+                                    @endphp
+
+                                    {{ $formattedDate }}
                                 </p>
                             </div>
 
