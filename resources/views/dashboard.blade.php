@@ -75,7 +75,7 @@
             </div>
 
             {{-- card --}}
-            <div id="search-results" class="flex flex-wrap p-4 mx-6">
+            <div id="search-results" class="flex flex-wrap p-4 mx-6 justify-center">
                 @include('layouts.recipe-list', ['recipe' => $recipe])
             </div>
 

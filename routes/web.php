@@ -32,7 +32,11 @@ Route::get('/dashboard', function (Request $request) {
     $searchTerm = $request->search;
     
     if($searchTerm){
-        $recipe = Recipe::search($searchTerm)->paginate(3);
+        $recipe = Recipe::whereHas('user', function($query) use ($searchTerm) {
+                            $query->where('name', 'like', '%' . $searchTerm . '%');
+                        })->orWhere('category', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('title', 'like', '%' . $searchTerm . '%')
+                        ->paginate(3);
     }
     else{
         // number of items per page

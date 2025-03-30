@@ -226,39 +226,42 @@
                                             </button>
                                         </div>
                                         <!-- Dialog Body -->
-                                        <div class="p-4 h-[250px] overflow-auto"> 
-                                            @foreach ($comment as $c)
-                                                <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
-                                                    <footer class="flex justify-between items-center mb-2">
-                                                        <div class="flex items-center">
-                                                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
-                                                                    class="mr-2 w-6 h-6 rounded-full"
-                                                                    src="{{ asset('assets/img/logo.png') }}"
-                                                                    alt="user profile">
-                                                                {{ $c->user->name }}
-                                                            </p>
+                                        <div class="p-4 h-[250px] overflow-auto">
+                                            @if($comment->isNotEmpty())
+                                                @foreach ($comment as $c)
+                                                    <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                                        <footer class="flex justify-between items-center mb-2">
+                                                            <div class="flex items-center">
+                                                                <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"><img
+                                                                        class="mr-2 w-6 h-6 rounded-full"
+                                                                        src="{{ asset('assets/img/logo.png') }}"
+                                                                        alt="user profile">
+                                                                    {{ $c->user->name }}
+                                                                </p>
 
-                                                            @php
-                                                                $date = $c->created_at;
-                                                                $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
-                                                            @endphp
+                                                                @php
+                                                                    $date = $c->created_at;
+                                                                    $formattedDate = \Carbon\Carbon::parse($date)->format('d M Y H:i');
+                                                                @endphp
 
-                                                            <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                                {{ $formattedDate }}
-                                                            </p>
-                                                        </div>
-                                                    </footer>
+                                                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                                                    {{ $formattedDate }}
+                                                                </p>
+                                                            </div>
+                                                        </footer>
 
-                                                    <p class="text-gray-500">
-                                                        {{ $c->content }}
-                                                    </p>
+                                                        <p class="text-gray-500">
+                                                            {{ $c->content }}
+                                                        </p>
 
-                                                </article>
-                                                
-                                                <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+                                                    </article>
+                                                    
+                                                    <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
-                                            @endforeach
-                                            
+                                                @endforeach
+                                            @else
+                                                <span class="text-gray-500 text-xs">No comments found.</span>
+                                            @endif
                                         </div>
                                         
                                     </div>
