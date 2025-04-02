@@ -353,7 +353,7 @@
                 
             }
 
-            function saveRating(con) {
+            function saveRating(val) {
                 const recipeId = {{ $recipe->id }};
                 
                 // Here you can send the rating to the server
@@ -363,7 +363,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token if using Laravel
                     },
-                    body: JSON.stringify({ rating: ratingValue, recipe_id: recipeId })
+                    body: JSON.stringify({ rating: val, recipe_id: recipeId })
                 })
                 .then(response => response.json())
                 .then(data => {
