@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecipeResource\Pages;
 use App\Filament\Resources\RecipeResource\RelationManagers;
+use App\Filament\Resources\RecipeResource\RelationManagers\CommentsRelationManager;
 use App\Models\Recipe;
 use App\Models\User;
 use Filament\Forms;
@@ -112,10 +113,66 @@ class RecipeResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\Section::make('Recipe Info')
+                    ->collapsible()
+                    ->schema([
+                        
+                        Infolists\Components\Group::make([
+                            Infolists\Components\Section::make()->schema([
+                                Infolists\Components\ImageEntry::make('image_path')
+                                    ->size(150),
+                            ])->columnSpan(1),
+                        ]), 
+
+                        Infolists\Components\Group::make([
+                            Infolists\Components\TextEntry::make('title'),
+                            Infolists\Components\TextEntry::make('cooking_time')
+                                ->icon('heroicon-o-clock')
+                                ->suffix('s'),
+                            Infolists\Components\TextEntry::make('category')
+                                ->badge()
+                                ->color(fn (string $state): string => match ($state) {
+                                    'dinner' => 'gray',
+                                    'lunch' => 'warning',
+                                    'breakfast' => 'success',
+                                }),
+                        ]), 
+
+                        Infolists\Components\Group::make([
+                            Infolists\Components\TextEntry::make('user.name')
+                                ->label('Author'),
+                            Infolists\Components\TextEntry::make('ratings')
+                                ->formatStateUsing(fn ($record) => $record->ratings->avg('score') ?? 0)
+                                ->icon('heroicon-m-star')
+                                ->iconColor('primary')
+                                ->color('primary'),
+                        ]), 
+
+                       
+                    ])->columns(3),
+                
+                Infolists\Components\Section::make('Recipe Ingredients')
+                    ->collapsible()
+                    ->schema([
+                        Infolists\Components\TextEntry::make('ingredients'),
+                    ]),
+               
+                Infolists\Components\Section::make('Recipe Instructions')
+                    ->collapsible()
+                    ->schema([
+                        Infolists\Components\TextEntry::make('instructions'),
+                    ]),
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            CommentsRelationManager::class,
         ];
     }
 
@@ -125,6 +182,7 @@ class RecipeResource extends Resource
             'index' => Pages\ListRecipes::route('/'),
             'create' => Pages\CreateRecipe::route('/create'),
             'edit' => Pages\EditRecipe::route('/{record}/edit'),
+            'view' => Pages\ViewRecipe::route('/{record}'),
         ];
     }
 }

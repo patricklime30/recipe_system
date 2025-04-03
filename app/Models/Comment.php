@@ -9,7 +9,6 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'recipe_id',
-        'parent_id',
         'content'
     ];
 
