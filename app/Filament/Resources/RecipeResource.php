@@ -82,7 +82,7 @@ class RecipeResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('cooking_time')
                     ->icon('heroicon-o-clock')
-                    ->suffix('s')
+                    ->suffix(' minutes')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Author')
@@ -132,7 +132,7 @@ class RecipeResource extends Resource
                             Infolists\Components\TextEntry::make('title'),
                             Infolists\Components\TextEntry::make('cooking_time')
                                 ->icon('heroicon-o-clock')
-                                ->suffix('s'),
+                                ->suffix(' minutes'),
                             Infolists\Components\TextEntry::make('category')
                                 ->badge()
                                 ->color(fn (string $state): string => match ($state) {
@@ -144,7 +144,8 @@ class RecipeResource extends Resource
 
                         Infolists\Components\Group::make([
                             Infolists\Components\TextEntry::make('user.name')
-                                ->label('Author'),
+                                ->label('Author')
+                                ->icon('heroicon-m-user'),
                             Infolists\Components\TextEntry::make('ratings')
                                 ->formatStateUsing(fn ($record) => $record->ratings->avg('score') ?? 0)
                                 ->icon('heroicon-m-star')

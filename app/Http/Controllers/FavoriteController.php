@@ -43,10 +43,14 @@ class FavoriteController extends Controller
         if($favorite){
             $favorite->delete();
 
+            session()->flash('success', 'Recipe removed from favorites!');
+
             return response()->json(['message' => 'Recipe removed from favorites!', 'favorited' => false]);
         }
         else{
             Favorite::create(['user_id' => $user, 'recipe_id' => $request->recipe_id]);
+
+            session()->flash('success', 'Recipe added to favorites!');
 
             return response()->json(['message' => 'Recipe added to favorites!', 'favorited' => true]);
         }

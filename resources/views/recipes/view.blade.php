@@ -60,7 +60,7 @@
                                     <a
                                         class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg bg-inherit text-slate-700">
                                         <i class="fa fa-clock-o"></i>
-                                        <span class="ml-2">{{ $recipe->cooking_time }} m</span>
+                                        <span class="ml-2">{{ $recipe->cooking_time }} Minutes</span>
                                     </a>
                                 </li>
                                 <li class="z-30 flex-auto text-center">
@@ -314,13 +314,11 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.message);
                   
                     location.reload();
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    console.log('failed')
                 });
             });
 
@@ -328,7 +326,7 @@
                 const recipeId = {{ $recipe->id }};
                 const message = document.getElementById('body_comment').value;
 
-                if(message){
+                // if(message){
                     // Here you can send the rating to the server
                     fetch('{{ route('recipe.comment') }}', {
                         method: 'POST',
@@ -346,10 +344,10 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
-                }
-                else{
-                    alert('empty content');
-                }
+                // }
+                // else{
+                //     alert('empty content');
+                // }
                 
             }
 

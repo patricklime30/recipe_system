@@ -8,7 +8,9 @@ use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class RecipeController extends Controller
 {
@@ -208,13 +210,27 @@ class RecipeController extends Controller
             'score' => $request->rating
         ]);
 
+        session()->flash('success', 'Rating added!');
+
         return response()->json(['success' => 'Rating added!']);
     }
 
     public function sendComment(Request $request){
-        $request->validate([
+        // $request->validate([
+        //     'content' => 'required|string',
+        // ]);
+
+        $validator = Validator::make($request->all(), [
             'content' => 'required|string',
         ]);
+
+        if ($validator->fails()) {
+            // Flash the error message
+            session()->flash('error', 'Comment content cannot be empty!');
+
+             // Return a JSON response with the error message
+            return response()->json(['error' => 'Comment content cannot be empty!']);
+        }
 
         $data = [
             'recipe_id' => $request->recipeId,
@@ -223,6 +239,8 @@ class RecipeController extends Controller
         ];
 
         Comment::create($data);
+
+        session()->flash('success', 'Comment added!');
 
         return response()->json(['success' => 'Comment added!']);
     }

@@ -60,6 +60,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('recipes_count')
                     ->counts('recipes')
+                    ->icon('heroicon-m-book-open')
                     ->label('Total Recipes')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
