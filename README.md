@@ -1,6 +1,6 @@
 # Recipe Sharing System
 
-![Recipe Sharing System Screenshot]([https://github.com/patricklime30/recipe_system/blob/main/public/assets/img/homepage.png?raw=true)
+![Recipe Sharing System Screenshot]([https://github.com/patricklime30/recipe_system/blob/main/public/assets/img/homepage.png?raw=true])
 
 ## Table of Contents
 - [Introduction](#introduction)
