@@ -28,5 +28,9 @@ The Recipe Sharing System is a web application built with Laravel and Blade temp
 - [MySQL](https://www.mysql.com/) - Database management system
 - [Tailwind](https://getbootstrap.com/) - CSS framework for responsive design
 
-## Installation
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. The MIT License allows for reuse within proprietary software, as long as the license is distributed with that software. It is a permissive license that is simple and easy to understand.
+
+## Contact
+For any inquiries, suggestions, or feedback, please feel free to reach out to me at [patrickliem30@gmail.com]. You can also connect with me on [GitHub](https://github.com/patricklime30) or [Youtube](#) (if applicable).
 
