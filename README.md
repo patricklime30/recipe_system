@@ -21,6 +21,7 @@ The Recipe Sharing System is a web application built with Laravel and Blade temp
 - Create, read, update, and delete (CRUD) recipes
 - Comment on recipes
 - Rate recipes
+- Save recipes to favorites
 - Admin panel for managing recipes and comments
 - User-friendly interface
 
