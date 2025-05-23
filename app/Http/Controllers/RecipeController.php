@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentMessage;
 use App\Models\Comment;
 use App\Models\Rating;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -241,6 +244,12 @@ class RecipeController extends Controller
         Comment::create($data);
 
         session()->flash('success', 'Comment added!');
+
+        $recipe = Recipe::find($request->recipeId);
+
+        $message = Auth::user()->name . ' has commented on ' . $recipe->title;
+
+        event(new CommentMessage($message, $recipe->user_id));
 
         return response()->json(['success' => 'Comment added!']);
     }

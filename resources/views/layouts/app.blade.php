@@ -72,6 +72,24 @@
                 
             @endif
 
+            <div id="comment-notification" class="hidden fixed flex items-center mx-auto mt-4 w-full max-w-xs top-5 right-5 z-10 p-4 mb-4 text-gray-500 shadow-sm flex-col bg-white rounded-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-8 h-8 rounded-lg border border-blue-100 text-blue-400 bg-blue-50" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="flex flex-col ml-3">
+                            <div class="font-medium leading-none">New Comment</div>
+                            <p id='comment-notification-message' class="text-sm text-gray-600 leading-none mt-2"></p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
             <!-- Page Content -->
             <main class="relative min-h-[90vh] transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
                 {{-- header --}}
@@ -96,6 +114,57 @@
     </body>
 
     <script src="{{ asset('./assets/js/argon-dashboard-tailwind.js?v=1.0.1') }}" async></script>
+
+    <script>
+        let hideTimeout = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            if(!window.Echo){
+                console.log('Echo is not initialized yet!');
+                return;
+            }
+
+            console.log('echo is ',window.Echo);
+
+            window.Echo.channel('MyComment')
+                .subscribed(() => {
+                    console.log('successfully subcribed to channel')
+                })
+                .error((error) => {
+                    console.error('failed:',error)
+                })
+                .listen('.comment', (e) => {
+                    console.log('Received broadcast event:', e);
+                    
+                    const currentUserId = @json(Auth::check() ? Auth::user()->id : null);
+        
+                    // Check if the current user is the post creator
+                    if (e.creator === currentUserId) {
+                        showNotification(e.message);
+                    }
+                });
+        });
+
+        function showNotification(message) {
+            const notificationEl = document.getElementById('comment-notification');
+            const notificationMessage = document.getElementById('comment-notification-message');
+            
+            notificationEl.classList.remove('hidden');
+            notificationMessage.innerHTML = message;
+
+            // Clear previous timeout if any
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+            }
+
+            // Auto-hide after 10 seconds
+            hideTimeout = setTimeout(() => {
+                notificationEl.classList.add('hidden');
+            }, 10000)
+        }
+        
+    </script>
     
     @yield('scripts')
 </html>
